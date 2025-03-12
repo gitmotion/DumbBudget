@@ -1038,6 +1038,21 @@ async function initMainPage() {
     updateTotals();
 }
 
+// // Register service worker
+const registerServiceWorker = () => {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js') // Replace with your service worker path
+          .then(registration => {
+            console.log('Service Worker registered with scope:', registration.scope);
+          })
+          .catch(error => {
+            console.error('Service Worker registration failed:', error);
+          });
+      } else {
+        console.log('Service workers are not supported.');
+      }
+}
+
 // Initialize functionality
 document.addEventListener('DOMContentLoaded', () => {
     initThemeToggle();
@@ -1053,4 +1068,6 @@ document.addEventListener('DOMContentLoaded', () => {
         initModalHandling();
         initMainPage();
     }
+    
+    registerServiceWorker();
 }); 

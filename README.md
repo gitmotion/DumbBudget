@@ -18,6 +18,7 @@ A simple, secure personal budgeting app with PIN protection. Track your income a
 - 📤 Export to CSV
 - 🔍 Filter transactions by type
 - 💱 Multi-currency support
+- 🌐 PWA Support
 
 ## Supported Currencies
 
@@ -50,6 +51,7 @@ Set your preferred currency using the `CURRENCY` environment variable (defaults 
 
 ### Using Docker
 
+#### Docker Run - Imperative
 ```bash
 docker run -d \
   -p 3000:3000 \
@@ -57,8 +59,28 @@ docker run -d \
   -e DUMBBUDGET_PIN=12345 \
   -e CURRENCY=USD \
   -e BASE_URL=http://localhost:3000 \
-  -e SITE_TITLE='My Account' \
+  -e SITE_TITLE='DumbBudget' \
+  -e INSTANCE_NAME='My Account' \
   dumbwareio/dumbbudget:latest
+```
+
+#### Docker Compose - Declarative
+```yaml
+services:
+    dumbbudget:
+        image: dumbwareio/dumbbudget:latest
+        ports:
+            - 3000:3000
+        volumes:
+            - ./data:/app/data 
+        environment:  # Environment variables for the DumbBudget service
+            SITE_TITLE: DumbBudget  # The title shown in the web interface
+            DUMBBUDGET_PIN: 12345  # Optional PIN protection (4-10 digits, leave empty to disable)
+            BASE_URL: http://localhost:3000  # The base URL for the application
+            # CURRENCY: USD # Defaults to USD - Supported currencies: https://github.com/DumbWareio/DumbBudget?tab=readme-ov-file#supported-currencies
+            # INSTANCE_NAME: MyAccount # Allows you to name each instance should you have multiple.
+            # PORT: 3000 # Port number for the server
+
 ```
 
 > **Note**: Replace `/path/to/your/data` with the actual path where you want to store your transaction data on the host machine.
@@ -71,7 +93,8 @@ docker run -d \
 | `PORT` | Port number for the server | No | `3000` | `8080` |
 | `CURRENCY` | Currency code for transactions | No | `USD` | `EUR` |
 | `BASE_URL` | Base URL for the application | No | `http://localhost:PORT` | `https://budget.example.com` |
-| `SITE_TITLE` | Allows you to name each instance should you have multiple. | No | - | `My Account` |
+| `SITE_TITLE` | Title of the site. | No | `DumbBudget` | `DumbBudget` |
+| `INSTANCE_NAME` | Allows you to name each instance should you have multiple. | No | - | `My Account` |
 
 ## Development Setup
 
@@ -93,7 +116,8 @@ PORT=3000
 NODE_ENV=development
 BASE_URL=http://localhost:3000
 CURRENCY=USD
-SITE_TITLE='My Account'
+SITE_TITLE='DumbBudget'
+INSTANCE_NAME='My Account'
 ```
 
 4. Start the development server:
@@ -118,7 +142,8 @@ docker run -d \
   -v ~/dumbbudget-data:/app/data \
   -e DUMBBUDGET_PIN=12345 \
   -e BASE_URL=http://localhost:3000 \
-  -e SITE_TITLE='My Account' \
+  -e SITE_TITLE='DumbBudget' \
+  -e INSTANCE_NAME='My Account' \
   dumbwareio/dumbbudget:latest
 ```
 

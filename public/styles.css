@@ -212,10 +212,11 @@ h3 {
 }
 
 /* Responsive adjustments */
-@media (max-width: 400px) {
+@media (max-width: 600px) {
     form, .container {
-        padding: 3rem 0.75rem 1.5rem;
-        width: calc(100% - 1rem);
+        margin: 0, auto;
+        padding: 0, auto;
+        width: 100%;
     }
 
     .pin-input-container {

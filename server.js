@@ -6,11 +6,13 @@ const crypto = require('crypto');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const fs = require('fs').promises;
+const { generatePWAManifest } = require('./scripts/pwa-manifest-generator')
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
-const SITE_TITLE = process.env.SITE_TITLE || 'DumbBudget';
+const SITE_TITLE = process.env.SITE_TITLE || "DumbBudget";
+const INSTANCE_NAME = process.env.INSTANCE_NAME;
 
 // Get the project name from package.json to use for the PIN environment variable
 const projectName = require('./package.json').name.toUpperCase().replace(/-/g, '_');
@@ -149,6 +151,9 @@ app.use(session({
     }
 }));
 
+// Dynamically generate PWA Manifest into public folder
+generatePWAManifest(SITE_TITLE, INSTANCE_NAME);
+
 // Constant-time PIN comparison to prevent timing attacks
 function verifyPin(storedPin, providedPin) {
     if (!storedPin || !providedPin) return false;
@@ -201,13 +206,9 @@ app.get(BASE_PATH + '/login', (req, res) => {
 });
 
 app.get(BASE_PATH + '/api/config', (req, res) => {
-    let instanceName = process.env.SITE_TITLE;
-    if (instanceName == undefined) {
-        instanceName = 'DumbBudget';
-    } else {
-        instanceName = `DumbBudget - ${process.env.SITE_TITLE}`
-    }
-    res.json({ instanceName: instanceName });
+    const instanceTitle = !INSTANCE_NAME ? SITE_TITLE : `${SITE_TITLE} - ${INSTANCE_NAME}`
+
+    res.json({ instanceName: instanceTitle });
 });
 
 app.get(BASE_PATH + '/pin-length', (req, res) => {

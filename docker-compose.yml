@@ -1,0 +1,15 @@
+services:
+    dumbbudget:
+        # image: dumbwareio/dumbbudget:latest
+        build: .
+        ports:
+            - 3000:3000
+        volumes:
+            - ./data:/app/data 
+        environment:  # Environment variables for the DumbBudget service
+            SITE_TITLE: DumbBudget  # The title shown in the web interface
+            DUMBBUDGET_PIN: 12345  # Optional PIN protection (4-10 digits, leave empty to disable)
+            BASE_URL: http://localhost:3000  # The base URL for the application
+            # CURRENCY: USD # Defaults to USD - Supported currencies: https://github.com/DumbWareio/DumbBudget?tab=readme-ov-file#supported-currencies
+            # INSTANCE_NAME: MyAccount # Allows you to name each instance should you have multiple.
+            # PORT: 3000 # Port number for the server
